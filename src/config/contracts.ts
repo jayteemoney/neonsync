@@ -1,0 +1,135 @@
+export const NEON_ARENA_ADDRESS = (import.meta.env.VITE_NEON_ARENA_CONTRACT_ADDRESS || '') as `0x${string}`;
+
+export const NEON_ARENA_ABI = [
+  {
+    type: 'constructor',
+    inputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'event',
+    name: 'ArenaInitialized',
+    inputs: [
+      { name: 'contractAddress', type: 'address', indexed: true },
+      { name: 'timestamp', type: 'uint256', indexed: false },
+    ],
+  },
+  {
+    type: 'event',
+    name: 'PlayerAction',
+    inputs: [
+      { name: 'player', type: 'address', indexed: true },
+      { name: 'actionType', type: 'string', indexed: false },
+      { name: 'value', type: 'uint256', indexed: false },
+      { name: 'timestamp', type: 'uint256', indexed: false },
+    ],
+  },
+  {
+    type: 'function',
+    name: 'batchRecordActions',
+    inputs: [
+      { name: 'actionTypes', type: 'string[]' },
+      { name: 'values', type: 'uint256[]' },
+    ],
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    name: 'getAllPlayers',
+    inputs: [],
+    outputs: [{ name: '', type: 'address[]' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'getPlayerActionCount',
+    inputs: [{ name: 'player', type: 'address' }],
+    outputs: [{ name: '', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'getPlayerCount',
+    inputs: [],
+    outputs: [{ name: '', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'getPlayerScore',
+    inputs: [{ name: 'player', type: 'address' }],
+    outputs: [{ name: '', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'getPlayerStats',
+    inputs: [{ name: 'player', type: 'address' }],
+    outputs: [
+      { name: 'score', type: 'uint256' },
+      { name: 'actionCount', type: 'uint256' },
+      { name: 'isRegistered', type: 'bool' },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'isActive',
+    inputs: [],
+    outputs: [{ name: '', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'owner',
+    inputs: [],
+    outputs: [{ name: '', type: 'address' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'playerActionCount',
+    inputs: [{ name: '', type: 'address' }],
+    outputs: [{ name: '', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'playerScores',
+    inputs: [{ name: '', type: 'address' }],
+    outputs: [{ name: '', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'players',
+    inputs: [{ name: '', type: 'uint256' }],
+    outputs: [{ name: '', type: 'address' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'recordAction',
+    inputs: [
+      { name: 'actionType', type: 'string' },
+      { name: 'value', type: 'uint256' },
+    ],
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    name: 'setArenaStatus',
+    inputs: [{ name: '_isActive', type: 'bool' }],
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    name: 'transferOwnership',
+    inputs: [{ name: 'newOwner', type: 'address' }],
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+] as const;
