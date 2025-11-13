@@ -7,7 +7,7 @@ import { useNeonArena } from './hooks/useNeonArena';
 
 export default function App() {
   const { isConnected } = useAccount();
-  const { recordAction, isPending, playerScore } = useNeonArena();
+  const { recordAction, playerScore, txState } = useNeonArena();
   const [localScore, setLocalScore] = useState(0);
 
   const handleScore = async (points: number) => {
@@ -53,12 +53,45 @@ export default function App() {
                   </div>
                 </div>
                 <GameCanvas onScore={handleScore} />
-                {isPending && (
+
+                {/* Transaction Status Feedback */}
+                {txState.status !== 'idle' && (
                   <div className="mt-4 text-center">
-                    <div className="inline-flex items-center gap-2 px-4 py-2 bg-cyan-400/20 rounded-lg border border-cyan-400">
-                      <div className="w-4 h-4 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin"></div>
-                      <span className="text-cyan-400">Recording on-chain...</span>
-                    </div>
+                    {txState.status === 'preparing' && (
+                      <div className="inline-flex items-center gap-2 px-4 py-2 bg-cyan-400/20 rounded-lg border border-cyan-400">
+                        <div className="w-4 h-4 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin"></div>
+                        <span className="text-cyan-400">Preparing transaction...</span>
+                      </div>
+                    )}
+                    {txState.status === 'pending' && (
+                      <div className="inline-flex items-center gap-2 px-4 py-2 bg-cyan-400/20 rounded-lg border border-cyan-400">
+                        <div className="w-4 h-4 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin"></div>
+                        <span className="text-cyan-400">Awaiting wallet approval...</span>
+                      </div>
+                    )}
+                    {txState.status === 'confirming' && (
+                      <div className="inline-flex items-center gap-2 px-4 py-2 bg-cyan-400/20 rounded-lg border border-cyan-400">
+                        <div className="w-4 h-4 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin"></div>
+                        <span className="text-cyan-400">Recording on-chain...</span>
+                      </div>
+                    )}
+                    {txState.status === 'success' && (
+                      <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-400/20 rounded-lg border border-green-400">
+                        <span className="text-2xl">✅</span>
+                        <span className="text-green-400">Score recorded on-chain!</span>
+                      </div>
+                    )}
+                    {txState.status === 'error' && (
+                      <div className="inline-flex flex-col items-center gap-2 px-4 py-2 bg-red-500/20 rounded-lg border border-red-500">
+                        <div className="flex items-center gap-2">
+                          <span className="text-2xl">⚠️</span>
+                          <span className="text-red-400">Transaction failed</span>
+                        </div>
+                        {txState.error && (
+                          <span className="text-xs text-red-300">{txState.error}</span>
+                        )}
+                      </div>
+                    )}
                   </div>
                 )}
               </div>

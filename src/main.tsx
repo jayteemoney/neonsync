@@ -7,23 +7,26 @@ import '@rainbow-me/rainbowkit/styles.css';
 import './index.css';
 import App from './App.tsx';
 import { config } from './config/wagmi';
+import { ErrorBoundary } from './components/ErrorBoundary';
 
 const queryClient = new QueryClient();
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <WagmiProvider config={config}>
-      <QueryClientProvider client={queryClient}>
-        <RainbowKitProvider
-          theme={darkTheme({
-            accentColor: '#00f0ff',
-            accentColorForeground: '#0a0a1a',
-            borderRadius: 'medium',
-          })}
-        >
-          <App />
-        </RainbowKitProvider>
-      </QueryClientProvider>
-    </WagmiProvider>
+    <ErrorBoundary>
+      <WagmiProvider config={config}>
+        <QueryClientProvider client={queryClient}>
+          <RainbowKitProvider
+            theme={darkTheme({
+              accentColor: '#00f0ff',
+              accentColorForeground: '#0a0a1a',
+              borderRadius: 'medium',
+            })}
+          >
+            <App />
+          </RainbowKitProvider>
+        </QueryClientProvider>
+      </WagmiProvider>
+    </ErrorBoundary>
   </StrictMode>
 );
