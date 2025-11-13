@@ -3,6 +3,7 @@ import { useReadContracts } from 'wagmi';
 import { NEON_ARENA_ADDRESS, NEON_ARENA_ABI } from '../config/contracts';
 import { useSomniaStream } from '../hooks/useSomniaStream';
 import type { LeaderboardEntry } from '../types';
+import { logger } from '../utils/logger';
 
 export function Leaderboard() {
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
@@ -52,7 +53,7 @@ export function Leaderboard() {
   // Listen for real-time PlayerAction events via Somnia Data Streams
   useEffect(() => {
     const unsubscribe = onPlayerAction((event) => {
-      console.log('🎮 [Leaderboard] Real-time score update detected!', {
+      logger.log('🎮 [Leaderboard] Real-time score update detected!', {
         player: event.player,
         newPoints: event.value.toString(),
       });
@@ -69,7 +70,7 @@ export function Leaderboard() {
     if (isConnected) return; // Don't poll if WebSocket is active
 
     const interval = setInterval(() => {
-      console.log('⚠️ [Leaderboard] Using fallback polling (WebSocket disconnected)');
+      logger.log('⚠️ [Leaderboard] Using fallback polling (WebSocket disconnected)');
       refetch();
     }, 30000); // 30 seconds fallback polling
 

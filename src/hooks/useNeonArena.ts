@@ -1,6 +1,7 @@
 import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
 import { NEON_ARENA_ADDRESS, NEON_ARENA_ABI } from '../config/contracts';
 import { useState, useEffect } from 'react';
+import { logger } from '../utils/logger';
 
 interface TransactionState {
   status: 'idle' | 'preparing' | 'pending' | 'confirming' | 'success' | 'error';
@@ -42,28 +43,28 @@ export function useNeonArena() {
         error: error?.message || 'Transaction failed',
         hash: hash || null,
       });
-      console.error('🚨 [Transaction Error]:', error);
+      logger.error('🚨 [Transaction Error]:', error);
     } else if (isSuccess) {
       setTxState({
         status: 'success',
         error: null,
         hash: hash || null,
       });
-      console.log('✅ [Transaction Success]:', hash);
+      logger.log('✅ [Transaction Success]:', hash);
     } else if (isConfirming) {
       setTxState({
         status: 'confirming',
         error: null,
         hash: hash || null,
       });
-      console.log('⏳ [Transaction Confirming]:', hash);
+      logger.log('⏳ [Transaction Confirming]:', hash);
     } else if (isPending) {
       setTxState({
         status: 'pending',
         error: null,
         hash: null,
       });
-      console.log('📝 [Transaction Pending]...');
+      logger.log('📝 [Transaction Pending]...');
     } else if (txState.status !== 'idle') {
       // Reset after success
       const timer = setTimeout(() => {
@@ -75,7 +76,7 @@ export function useNeonArena() {
 
   const recordAction = async (actionType: string, value: number) => {
     if (!address) {
-      console.error('🚨 No wallet connected');
+      logger.error('🚨 No wallet connected');
       setTxState({
         status: 'error',
         error: 'Please connect your wallet first',
@@ -94,7 +95,7 @@ export function useNeonArena() {
         args: [actionType, BigInt(value)],
       });
     } catch (error: any) {
-      console.error('🚨 [recordAction Error]:', error);
+      logger.error('🚨 [recordAction Error]:', error);
       setTxState({
         status: 'error',
         error: error.message || 'Failed to submit transaction',

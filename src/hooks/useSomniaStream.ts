@@ -2,6 +2,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { createPublicClient, webSocket, type Log } from 'viem';
 import { somniaTestnet } from '../config/wagmi';
 import { NEON_ARENA_ADDRESS, NEON_ARENA_ABI } from '../config/contracts';
+import { logger } from '../utils/logger';
 
 /**
  * Somnia Data Streams Hook
@@ -98,18 +99,18 @@ export function useSomniaStream() {
                 // Notify all listeners
                 listeners.forEach((callback) => callback(event));
 
-                console.log('🔥 [SDS] Real-time event received:', {
+                logger.log('🔥 [SDS] Real-time event received:', {
                   player: event.player,
                   action: event.actionType,
                   value: event.value.toString(),
                 });
               } catch (err) {
-                console.error('Error parsing event:', err);
+                logger.error('Error parsing event:', err);
               }
             });
           },
           onError: (error) => {
-            console.error('🚨 [SDS] WebSocket error:', error);
+            logger.error('🚨 [SDS] WebSocket error:', error);
             setState((prev) => ({
               ...prev,
               error: error.message,
@@ -118,9 +119,9 @@ export function useSomniaStream() {
           },
         });
 
-        console.log('✅ [SDS] Connected to Somnia Data Streams');
+        logger.log('✅ [SDS] Connected to Somnia Data Streams');
       } catch (error: any) {
-        console.error('🚨 [SDS] Connection failed:', error);
+        logger.error('🚨 [SDS] Connection failed:', error);
         setState((prev) => ({
           ...prev,
           error: error.message || 'Failed to connect',
@@ -139,7 +140,7 @@ export function useSomniaStream() {
       }
       if (client) {
         // WebSocket client cleanup happens automatically
-        console.log('🔌 [SDS] Disconnected from Somnia Data Streams');
+        logger.log('🔌 [SDS] Disconnected from Somnia Data Streams');
       }
     };
   }, [listeners]);
