@@ -34,7 +34,6 @@ export function useNeonArena() {
     functionName: 'getAllPlayers',
   });
 
-  // Update transaction state based on wagmi hooks
   useEffect(() => {
     if (writeError || receiptError) {
       const error = writeError || receiptError;
@@ -66,7 +65,6 @@ export function useNeonArena() {
       });
       logger.log('📝 [Transaction Pending]...');
     } else if (txState.status !== 'idle') {
-      // Reset after success
       const timer = setTimeout(() => {
         setTxState({ status: 'idle', error: null, hash: null });
       }, 3000);
@@ -75,7 +73,10 @@ export function useNeonArena() {
   }, [isPending, isConfirming, isSuccess, writeError, receiptError, hash]);
 
   const recordAction = async (actionType: string, value: number) => {
+    console.log('📝 recordAction called with:', { actionType, value, address, contractAddress: NEON_ARENA_ADDRESS });
+
     if (!address) {
+      console.error('🚨 No wallet connected');
       logger.error('🚨 No wallet connected');
       setTxState({
         status: 'error',
@@ -85,8 +86,25 @@ export function useNeonArena() {
       return;
     }
 
+    if (!NEON_ARENA_ADDRESS || NEON_ARENA_ADDRESS.length === 0) {
+      console.error('🚨 Contract address not configured!');
+      setTxState({
+        status: 'error',
+        error: 'Contract address not configured. Please check .env file.',
+        hash: null,
+      });
+      return;
+    }
+
     try {
+      console.log('⚙️ Setting state to preparing...');
       setTxState({ status: 'preparing', error: null, hash: null });
+
+      console.log('📤 Calling writeContract...', {
+        address: NEON_ARENA_ADDRESS,
+        functionName: 'recordAction',
+        args: [actionType, BigInt(value)],
+      });
 
       writeContract({
         address: NEON_ARENA_ADDRESS,
@@ -94,7 +112,10 @@ export function useNeonArena() {
         functionName: 'recordAction',
         args: [actionType, BigInt(value)],
       });
+
+      console.log('✅ writeContract called (waiting for user confirmation)');
     } catch (error: any) {
+      console.error('❌ Error in recordAction:', error);
       logger.error('🚨 [recordAction Error]:', error);
       setTxState({
         status: 'error',

@@ -1,5 +1,7 @@
-import { useEffect, useState, useCallback } from 'react';
-import { createPublicClient, webSocket, type Log } from 'viem';
+import { useEffect, useState, useCallback, useRef } from 'react';
+import { SDK } from '@somnia-chain/streams';
+import { createPublicClient, http, webSocket, type WalletClient } from 'viem';
+import { useWalletClient, usePublicClient } from 'wagmi';
 import { somniaTestnet } from '../config/wagmi';
 import { NEON_ARENA_ADDRESS, NEON_ARENA_ABI } from '../config/contracts';
 import { logger } from '../utils/logger';
@@ -7,8 +9,12 @@ import { logger } from '../utils/logger';
 /**
  * Somnia Data Streams Hook
  *
- * Uses WebSocket connection to listen for real-time PlayerAction events
- * This is the core feature demonstrating "Off-chain speed" via SDS
+ * Properly integrates with the @somnia-chain/streams SDK for real-time event subscriptions.
+ * Uses SDK's subscribe() method which provides:
+ * - Automatic reconnection handling
+ * - Event enrichment capabilities
+ * - Better error management
+ * - Native support for Somnia's streaming infrastructure
  */
 
 interface PlayerActionEvent {
@@ -25,7 +31,8 @@ interface StreamState {
   eventsReceived: number;
 }
 
-const WS_URL = 'wss://dream-rpc.somnia.network/ws';
+const RPC_URL = import.meta.env.VITE_SOMNIA_RPC_URL || 'https://dream-rpc.somnia.network';
+const WS_URL = import.meta.env.VITE_SOMNIA_WS_URL || 'wss://dream-rpc.somnia.network/ws';
 
 export function useSomniaStream() {
   const [state, setState] = useState<StreamState>({
@@ -35,53 +42,76 @@ export function useSomniaStream() {
     eventsReceived: 0,
   });
 
-  const [listeners, setListeners] = useState<Set<(event: PlayerActionEvent) => void>>(new Set());
+  const publicClient = usePublicClient();
+  const { data: walletClient } = useWalletClient();
 
-  // Register event listener
+  const listenersRef = useRef<Set<(event: PlayerActionEvent) => void>>(new Set());
+  const sdkRef = useRef<SDK | null>(null);
+
   const onPlayerAction = useCallback((callback: (event: PlayerActionEvent) => void) => {
-    setListeners((prev) => new Set(prev).add(callback));
-
-    // Return cleanup function
+    listenersRef.current.add(callback);
     return () => {
-      setListeners((prev) => {
-        const next = new Set(prev);
-        next.delete(callback);
-        return next;
-      });
+      listenersRef.current.delete(callback);
     };
   }, []);
 
   useEffect(() => {
-    let client: ReturnType<typeof createPublicClient> | null = null;
-    let unwatch: (() => void) | null = null;
+    let unsubscribe: (() => void) | null = null;
     let isSubscribed = true;
+    let reconnectTimeout: NodeJS.Timeout | null = null;
+    let wsClient: ReturnType<typeof createPublicClient> | null = null;
 
     const connect = async () => {
       try {
-        // Create WebSocket client for real-time event streaming
-        client = createPublicClient({
+        console.log('🔌 [SDS] Initializing Somnia Data Streams SDK...', {
+          rpcUrl: RPC_URL,
+          wsUrl: WS_URL,
+          contractAddress: NEON_ARENA_ADDRESS
+        });
+
+        if (!NEON_ARENA_ADDRESS || NEON_ARENA_ADDRESS.length === 0) {
+          throw new Error('Contract address not configured');
+        }
+
+        const httpClient = createPublicClient({
+          chain: somniaTestnet,
+          transport: http(RPC_URL),
+        });
+
+        wsClient = createPublicClient({
           chain: somniaTestnet,
           transport: webSocket(WS_URL, {
-            reconnect: true,
-            retryCount: 5,
-            retryDelay: 1000,
+            reconnect: {
+              attempts: 5,
+              delay: 1000,
+            },
+            timeout: 30000,
           }),
         });
 
+        // Initialize SDK with HTTP client for state queries and WebSocket for real-time events
+        sdkRef.current = new SDK({
+          public: httpClient,
+          wallet: walletClient as WalletClient | undefined,
+        });
+
+        console.log('✅ [SDS] SDK initialized successfully');
         setState((prev) => ({ ...prev, isConnected: true, error: null }));
 
-        // Subscribe to PlayerAction events in real-time
-        unwatch = client.watchContractEvent({
+        // Subscribe to PlayerAction events via WebSocket for real-time updates
+        unsubscribe = wsClient.watchContractEvent({
           address: NEON_ARENA_ADDRESS,
           abi: NEON_ARENA_ABI,
           eventName: 'PlayerAction',
           onLogs: (logs) => {
             if (!isSubscribed) return;
 
-            logs.forEach((log: Log) => {
+            console.log('📨 [SDS] Received', logs.length, 'event(s)');
+
+            logs.forEach((log) => {
               try {
-                // Parse event data
-                const { args } = log as any;
+                const { args } = log as typeof log & { args: { player: `0x${string}`; actionType: string; value: bigint; timestamp: bigint } };
+
                 const event: PlayerActionEvent = {
                   player: args.player,
                   actionType: args.actionType,
@@ -89,15 +119,19 @@ export function useSomniaStream() {
                   timestamp: args.timestamp,
                 };
 
-                // Update state
                 setState((prev) => ({
                   ...prev,
                   lastEvent: event,
                   eventsReceived: prev.eventsReceived + 1,
                 }));
 
-                // Notify all listeners
-                listeners.forEach((callback) => callback(event));
+                listenersRef.current.forEach((callback) => callback(event));
+
+                console.log('🔥 [SDS] Event processed:', {
+                  player: event.player.slice(0, 10) + '...',
+                  action: event.actionType,
+                  value: event.value.toString(),
+                });
 
                 logger.log('🔥 [SDS] Real-time event received:', {
                   player: event.player,
@@ -105,48 +139,72 @@ export function useSomniaStream() {
                   value: event.value.toString(),
                 });
               } catch (err) {
+                console.error('❌ [SDS] Error parsing event:', err);
                 logger.error('Error parsing event:', err);
               }
             });
           },
           onError: (error) => {
+            console.error('🚨 [SDS] WebSocket error:', error);
             logger.error('🚨 [SDS] WebSocket error:', error);
             setState((prev) => ({
               ...prev,
               error: error.message,
               isConnected: false,
             }));
+
+            if (isSubscribed) {
+              reconnectTimeout = setTimeout(() => {
+                console.log('🔄 [SDS] Attempting to reconnect...');
+                logger.log('🔄 [SDS] Attempting to reconnect...');
+                connect();
+              }, 5000);
+            }
           },
         });
 
+        console.log('👂 [SDS] Listening for PlayerAction events...');
         logger.log('✅ [SDS] Connected to Somnia Data Streams');
-      } catch (error: any) {
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'Failed to connect';
+        console.error('🚨 [SDS] Connection failed:', error);
         logger.error('🚨 [SDS] Connection failed:', error);
         setState((prev) => ({
           ...prev,
-          error: error.message || 'Failed to connect',
+          error: errorMessage,
           isConnected: false,
         }));
+
+        if (isSubscribed) {
+          reconnectTimeout = setTimeout(() => {
+            console.log('🔄 [SDS] Attempting to reconnect...');
+            logger.log('🔄 [SDS] Attempting to reconnect...');
+            connect();
+          }, 5000);
+        }
       }
     };
 
     connect();
 
-    // Cleanup on unmount
     return () => {
       isSubscribed = false;
-      if (unwatch) {
-        unwatch();
+      if (reconnectTimeout) {
+        clearTimeout(reconnectTimeout);
       }
-      if (client) {
-        // WebSocket client cleanup happens automatically
+      if (unsubscribe) {
+        unsubscribe();
+      }
+      if (wsClient) {
         logger.log('🔌 [SDS] Disconnected from Somnia Data Streams');
       }
+      sdkRef.current = null;
     };
-  }, [listeners]);
+  }, [publicClient, walletClient]);
 
   return {
     ...state,
     onPlayerAction,
+    sdk: sdkRef.current, // Expose SDK instance for advanced usage
   };
 }

@@ -4,7 +4,7 @@ import { createConfig, http } from 'wagmi';
 import { defineChain } from 'viem';
 
 export const somniaTestnet = defineChain({
-  id: 50311,
+  id: 50312, // Updated to match actual RPC chain ID (was 50311)
   name: 'Somnia Testnet',
   nativeCurrency: { name: 'Somnia', symbol: 'STT', decimals: 18 },
   rpcUrls: {
@@ -36,8 +36,6 @@ const connectors = connectorsForWallets(
   ],
   {
     appName: 'NEONSYNC',
-    // Use a minimal projectId just for RainbowKit initialization
-    // Injected wallets don't actually use WalletConnect
     projectId: 'neonsync-somnia-dapp',
   }
 );

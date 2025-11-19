@@ -9,7 +9,6 @@ export function Leaderboard() {
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
   const [lastUpdate, setLastUpdate] = useState<Date>(new Date());
 
-  // Connect to Somnia Data Streams for real-time updates
   const { isConnected, eventsReceived, error: streamError, onPlayerAction } = useSomniaStream();
 
   const { data, refetch } = useReadContracts({
@@ -33,7 +32,6 @@ export function Leaderboard() {
     })) || [],
   });
 
-  // Update leaderboard when data changes
   useEffect(() => {
     if (!players || !scoresData) return;
 
@@ -50,7 +48,6 @@ export function Leaderboard() {
     setLastUpdate(new Date());
   }, [players, scoresData]);
 
-  // Listen for real-time PlayerAction events via Somnia Data Streams
   useEffect(() => {
     const unsubscribe = onPlayerAction((event) => {
       logger.log('🎮 [Leaderboard] Real-time score update detected!', {
@@ -58,16 +55,15 @@ export function Leaderboard() {
         newPoints: event.value.toString(),
       });
 
-      // Refetch leaderboard data immediately when event is received
       refetch();
     });
 
     return unsubscribe;
   }, [onPlayerAction, refetch]);
 
-  // Fallback polling (only if WebSocket disconnected) - removed aggressive 5s polling
+  // Fallback polling only if WebSocket is disconnected
   useEffect(() => {
-    if (isConnected) return; // Don't poll if WebSocket is active
+    if (isConnected) return;
 
     const interval = setInterval(() => {
       logger.log('⚠️ [Leaderboard] Using fallback polling (WebSocket disconnected)');
@@ -78,11 +74,10 @@ export function Leaderboard() {
   }, [isConnected, refetch]);
 
   return (
-    <div className="bg-gray-900/80 backdrop-blur-sm rounded-lg border-2 border-cyan-400 p-6 shadow-lg shadow-cyan-400/30">
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-3xl font-bold text-cyan-400 tracking-wider">LEADERBOARD</h2>
+    <div className="bg-gray-900/80 backdrop-blur-sm rounded-lg border-2 border-cyan-400 p-4 sm:p-6 shadow-lg shadow-cyan-400/30 h-full">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 sm:mb-6 gap-3">
+        <h2 className="text-2xl sm:text-3xl font-bold text-cyan-400 tracking-wider">LEADERBOARD</h2>
         <div className="flex items-center gap-3">
-          {/* Connection Status Indicator */}
           <div className="flex items-center gap-2">
             <div
               className={`w-3 h-3 rounded-full ${
@@ -100,27 +95,25 @@ export function Leaderboard() {
                   : 'Connecting...'
               }
             ></div>
-            <span className="text-xs text-gray-400">
+            <span className="text-xs text-gray-400 font-mono">
               {isConnected ? 'LIVE' : streamError ? 'ERROR' : 'CONNECTING'}
             </span>
           </div>
         </div>
       </div>
 
-      {/* Stream Status Banner */}
       {isConnected && (
         <div className="mb-4 px-3 py-2 bg-cyan-400/10 border border-cyan-400/30 rounded text-xs">
-          <div className="flex items-center gap-2 text-cyan-400">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 text-cyan-400">
             <span className="font-bold">⚡ SOMNIA DATA STREAMS</span>
-            <span className="text-gray-400">•</span>
+            <span className="hidden sm:inline text-gray-400">•</span>
             <span className="text-gray-400">{eventsReceived} events received</span>
-            <span className="text-gray-400">•</span>
+            <span className="hidden sm:inline text-gray-400">•</span>
             <span className="text-gray-400">Zero latency updates</span>
           </div>
         </div>
       )}
 
-      {/* Error Message */}
       {streamError && (
         <div className="mb-4 px-3 py-2 bg-red-500/10 border border-red-500/30 rounded text-xs text-red-400">
           <strong>WebSocket Error:</strong> {streamError}
@@ -129,40 +122,50 @@ export function Leaderboard() {
         </div>
       )}
 
-      <div className="space-y-3">
-        {leaderboard.length === 0 ? (
-          <p className="text-gray-500 text-center py-8">No players yet. Be the first!</p>
+      <div className="space-y-2 sm:space-y-3">
+        {!players ? (
+          <div className="flex flex-col items-center justify-center py-12 space-y-4">
+            <div className="w-12 h-12 border-4 border-cyan-400 border-t-transparent rounded-full animate-spin"></div>
+            <p className="text-gray-400 text-sm">Loading leaderboard...</p>
+          </div>
+        ) : leaderboard.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-12 space-y-4">
+            <div className="text-5xl sm:text-6xl animate-float">🏆</div>
+            <p className="text-gray-500 text-center text-sm sm:text-base">No players yet. Be the first!</p>
+          </div>
         ) : (
-          leaderboard.slice(0, 10).map((entry) => (
+          leaderboard.slice(0, 10).map((entry, index) => (
             <div
               key={entry.address}
-              className="flex items-center justify-between p-3 bg-black/40 rounded border border-cyan-400/30 hover:border-magenta-500/50 transition-colors"
+              className="flex items-center justify-between p-2 sm:p-3 bg-black/40 rounded border border-cyan-400/30 hover:border-magenta-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-cyan-400/20 group"
+              style={{ animationDelay: `${index * 50}ms` }}
             >
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2 sm:gap-4 min-w-0">
                 <span
-                  className={`text-2xl font-bold w-8 ${
+                  className={`text-xl sm:text-2xl font-bold w-6 sm:w-8 shrink-0 transition-transform group-hover:scale-110 ${
                     entry.rank === 1
-                      ? 'text-yellow-400'
+                      ? 'text-yellow-400 drop-shadow-[0_0_8px_rgba(250,204,21,0.5)]'
                       : entry.rank === 2
-                      ? 'text-gray-300'
+                      ? 'text-gray-300 drop-shadow-[0_0_8px_rgba(209,213,219,0.5)]'
                       : entry.rank === 3
-                      ? 'text-orange-400'
+                      ? 'text-orange-400 drop-shadow-[0_0_8px_rgba(251,146,60,0.5)]'
                       : 'text-cyan-400'
                   }`}
                 >
-                  {entry.rank}
+                  {entry.rank === 1 ? '👑' : entry.rank === 2 ? '🥈' : entry.rank === 3 ? '🥉' : entry.rank}
                 </span>
-                <span className="text-gray-300 font-mono text-sm">
+                <span className="text-gray-300 font-mono text-xs sm:text-sm truncate">
                   {entry.address.slice(0, 6)}...{entry.address.slice(-4)}
                 </span>
               </div>
-              <span className="text-xl font-bold text-magenta-500">{entry.score}</span>
+              <span className="text-lg sm:text-xl font-bold text-magenta-500 shrink-0 transition-all group-hover:scale-110 group-hover:text-cyan-400">
+                {entry.score}
+              </span>
             </div>
           ))
         )}
       </div>
 
-      {/* Last Update Timestamp */}
       <div className="mt-4 text-xs text-gray-500 text-center">
         Last updated: {lastUpdate.toLocaleTimeString()}
       </div>
