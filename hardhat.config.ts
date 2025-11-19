@@ -20,8 +20,8 @@ const config: HardhatUserConfig = {
     // Somnia Testnet Configuration
     somniaTestnet: {
       type: "http",
-      url: process.env.SOMNIA_TESTNET_RPC || "https://testnet-rpc.somnia.network",
-      chainId: 50311, // Somnia Testnet Chain ID
+      url: process.env.SOMNIA_TESTNET_RPC || "https://dream-rpc.somnia.network",
+      chainId: 50312, // Somnia Testnet Chain ID (updated from 50311)
       accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
     },
     // Hardhat local network for testing
