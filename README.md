@@ -8,22 +8,21 @@
 
 **Live Demo**: [Watch Demo Video](#) | **Deployed Contract**: `0xc0f5c16087aa4176fb7e83fd39291f45cc10e62a`
 
----
 
-## 🎯 Hackathon Submission Overview
+## Hackathon Submission Overview
 
-### Technical Excellence ⭐⭐⭐⭐⭐
+### Technical Excellence 
 
 NEONSYNC demonstrates **production-grade implementation** of the Somnia Data Streams SDK with:
 
-- ✅ **Official SDK Integration**: Proper initialization with wagmi clients (`@somnia-chain/streams@^0.9.5`)
-- ✅ **Type-Safe Architecture**: Full TypeScript implementation with zero `any` types in SDK code
-- ✅ **Dual-Client Pattern**: HTTP client for data operations + WebSocket for real-time streaming
-- ✅ **Browser Polyfills**: Node.js Buffer polyfills via `vite-plugin-node-polyfills` for browser compatibility
-- ✅ **Automatic Reconnection**: 5-attempt retry logic with exponential backoff
-- ✅ **Error Recovery**: Comprehensive error handling with user-friendly feedback
-- ✅ **Clean Code**: ESLint compliant, production build succeeds, no warnings
-- ✅ **SDK Instance Exposed**: Available for advanced features (schema streams, event enrichment)
+- **Official SDK Integration**: Proper initialization with wagmi clients (`@somnia-chain/streams@^0.9.5`)
+-  **Type-Safe Architecture**: Full TypeScript implementation with zero `any` types in SDK code
+-  **Dual-Client Pattern**: HTTP client for data operations + WebSocket for real-time streaming
+-  **Browser Polyfills**: Node.js Buffer polyfills via `vite-plugin-node-polyfills` for browser compatibility
+-  **Automatic Reconnection**: 5-attempt retry logic with exponential backoff
+-  **Error Recovery**: Comprehensive error handling with user-friendly feedback
+-  **Clean Code**: ESLint compliant, production build succeeds, no warnings
+-  **SDK Instance Exposed**: Available for advanced features (schema streams, event enrichment)
 
 **Technical Proof Points**:
 ```typescript
@@ -80,7 +79,7 @@ Leaderboard syncs globally
 **Total end-to-end latency**: **~1.3-2.2 seconds** (including block finality)
 **Client-to-client latency**: **~100-200ms** (WebSocket push)
 
-### Somnia Integration 🌐
+### Somnia Integration 
 
 **Fully deployed and operational on Somnia Testnet (Chain ID: 50312)**
 
@@ -116,13 +115,13 @@ export const somniaTestnet = defineChain({
 - Event Watching: `PlayerAction` events via WebSocket
 
 **Verified On-Chain Activity**:
-- ✅ Contract deployed and verified
-- ✅ Events emitting successfully
-- ✅ WebSocket streaming operational
-- ✅ Multi-user testing completed
-- ✅ Production build optimized
+-Contract deployed and verified
+-Events emitting successfully
+-WebSocket streaming operational
+-Multi-user testing completed
+-Production build optimized
 
-### Potential Impact 🚀
+### Potential Impact 
 
 NEONSYNC is **not just a demo**—it's a **foundational framework** for real-time blockchain gaming:
 
@@ -155,23 +154,23 @@ NEONSYNC is **not just a demo**—it's a **foundational framework** for real-tim
 #### Ecosystem Contributions
 
 **Open Source Framework**:
-- 📦 Reusable React hooks (`useSomniaStream`, `useNeonArena`)
-- 🎨 UI component library (NetworkGuard, Header, Leaderboard)
-- 🔧 Vite configuration templates (polyfills, optimizations)
-- 📚 Comprehensive documentation (6000+ words across 3 guides)
+- Reusable React hooks (`useSomniaStream`, `useNeonArena`)
+- UI component library (NetworkGuard, Header, Leaderboard)
+- Vite configuration templates (polyfills, optimizations)
+- Comprehensive documentation (6000+ words across 3 guides)
 
 **Developer Experience**:
-- ✅ Plug-and-play SDK integration
-- ✅ TypeScript type safety
-- ✅ Error handling patterns
-- ✅ Testing strategies
-- ✅ Production deployment guide
+- Plug-and-play SDK integration
+- TypeScript type safety
+- Error handling patterns
+- Testing strategies
+- Production deployment guide
 
 **Technical Innovation**:
-- 🆕 First documented Node.js Buffer polyfill solution for SDS SDK
-- 🆕 Dual-client architecture pattern (HTTP + WebSocket)
-- 🆕 Automatic reconnection with state management
-- 🆕 Event listener pattern for React integration
+- First documented Node.js Buffer polyfill solution for SDS SDK
+- Dual-client architecture pattern (HTTP + WebSocket)
+- Automatic reconnection with state management
+- Event listener pattern for React integration
 
 #### Scalability & Evolution
 
@@ -206,7 +205,7 @@ NEONSYNC is **not just a demo**—it's a **foundational framework** for real-tim
 
 ---
 
-## 🏗️ Architecture
+## Architecture
 
 ### High-Level Overview
 
@@ -366,28 +365,28 @@ NEONSYNC is **not just a demo**—it's a **foundational framework** for real-tim
 
 ---
 
-## 🚀 Key Features
+## Key Features
 
 ### For Players
 
-✨ **Instant Gratification**
+ **Instant Gratification**
 - Actions reflect immediately (local + on-chain)
 - Real-time leaderboard updates
 - Live transaction status feedback
 
-🎮 **Smooth Gameplay**
+ **Smooth Gameplay**
 - 60 FPS Phaser 3 game engine
 - Responsive arrow key controls
 - Cyberpunk aesthetic (neon colors, particles)
 
-🏆 **Competitive Rankings**
+ **Competitive Rankings**
 - Global leaderboard
 - On-chain score verification
 - Immutable achievement records
 
 ### For Developers
 
-📦 **Reusable Components**
+**Reusable Components**
 ```typescript
 // Drop-in Somnia Data Streams integration
 import { useSomniaStream } from './hooks/useSomniaStream';
@@ -409,15 +408,8 @@ useEffect(() => {
 - Automatic reconnection
 - Browser polyfills configured
 
-📚 **Comprehensive Documentation**
-- `SOMNIA_SDK_INTEGRATION.md` - Technical deep dive (4000+ words)
-- `QUICK_START.md` - 3-minute setup guide
-- `INTEGRATION_SUMMARY.md` - Architecture overview
-- `CHAIN_ID_FIX.md` - Troubleshooting guide
 
----
-
-## 🛠️ Technology Stack
+## Technology Stack
 
 ### Frontend
 | Technology | Version | Purpose |
@@ -453,7 +445,7 @@ useEffect(() => {
 
 ---
 
-## 📋 Prerequisites
+## Prerequisites
 
 - **Node.js** 18+
 - **npm** or **yarn**
@@ -510,11 +502,11 @@ Open `http://localhost:5173`
 
 ### 5. Verify Real-Time Sync
 
-Open the app in **multiple browser windows** and watch scores sync instantly! 🎉
+Open the app in **multiple browser windows** and watch scores sync instantly! 
 
 ---
 
-## 📊 Smart Contract API
+## Smart Contract API
 
 ### Events
 
@@ -571,7 +563,7 @@ Returns complete player statistics.
 
 ---
 
-## 🎨 UI/UX Highlights
+## UI/UX Highlights
 
 ### Cyberpunk Aesthetic
 - **Neon Colors**: Cyan (`#00f0ff`) and Magenta (`#ff00ff`)
@@ -599,9 +591,9 @@ Returns complete player statistics.
 
 ---
 
-## 🔐 Security Considerations
+## Security Considerations
 
-✅ **Implemented**:
+**Implemented**:
 - Environment variables for sensitive data
 - `.env` excluded from git (`.gitignore`)
 - No private keys in client-side code
@@ -609,7 +601,7 @@ Returns complete player statistics.
 - Input validation (action type, values)
 - Rate limiting (via gas costs)
 
-✅ **Best Practices**:
+**Best Practices**:
 - TypeScript strict mode enabled
 - ESLint security rules
 - Dependency security audits (`npm audit`)
@@ -617,38 +609,8 @@ Returns complete player statistics.
 
 ---
 
-## 🚢 Deployment
 
-### Frontend (Vercel)
-
-```bash
-# Install Vercel CLI
-npm i -g vercel
-
-# Deploy
-vercel --prod
-```
-
-**Environment Variables** (add in Vercel dashboard):
-- `VITE_NEON_ARENA_CONTRACT_ADDRESS`
-- `VITE_SOMNIA_RPC_URL`
-- `VITE_SOMNIA_WS_URL`
-
-### Smart Contract (Somnia Testnet)
-
-```bash
-# Compile
-npm run compile
-
-# Deploy
-npm run deploy:somnia
-```
-
-Copy deployed address to `.env` → `VITE_NEON_ARENA_CONTRACT_ADDRESS`
-
----
-
-## 📈 Performance Metrics
+## Performance Metrics
 
 ### Bundle Size
 - **Total**: ~2.1 MB (uncompressed)
@@ -673,57 +635,6 @@ Copy deployed address to `.env` → `VITE_NEON_ARENA_CONTRACT_ADDRESS`
 
 ---
 
-## 🧪 Testing
-
-### Manual Testing Checklist
-
-- [x] SDK initializes without errors
-- [x] WebSocket connection establishes
-- [x] Events received in real-time
-- [x] Multiple clients sync correctly
-- [x] Reconnection works after network drop
-- [x] Mobile responsive design
-- [x] MetaMask integration functional
-- [x] Transaction error handling
-
-### Browser Console Verification
-
-Expected output on successful connection:
-```
-🔌 [SDS] Initializing Somnia Data Streams SDK...
-✅ [SDS] SDK initialized successfully
-👂 [SDS] Listening for PlayerAction events...
-✅ [SDS] Connected to Somnia Data Streams
-```
-
-After pressing SPACE:
-```
-🎮 Score action triggered: { points: 100, isConnected: true }
-📤 Calling recordAction...
-✅ recordAction called successfully
-📝 [Transaction Pending]...
-⏳ [Transaction Confirming]: 0x...
-✅ [Transaction Success]: 0x...
-📨 [SDS] Received 1 event(s)
-🔥 [SDS] Event processed: { player: "0x...", action: "SCORE", value: "100" }
-```
-
----
-
-## 📚 Documentation
-
-| Document | Description | Words |
-|----------|-------------|-------|
-| **SOMNIA_SDK_INTEGRATION.md** | Complete SDK integration guide | 4000+ |
-| **QUICK_START.md** | 3-minute setup & testing | 1500+ |
-| **INTEGRATION_SUMMARY.md** | Architecture & changes overview | 2500+ |
-| **CHAIN_ID_FIX.md** | Troubleshooting guide | 1500+ |
-| **README.md** (this file) | Project overview | 3000+ |
-
-**Total Documentation**: 12,500+ words
-
----
-
 ## 🤝 Contributing
 
 This project is a hackathon submission. Contributions welcome after evaluation period!
@@ -734,37 +645,6 @@ This project is a hackathon submission. Contributions welcome after evaluation p
 3. Commit changes (`git commit -m 'Add AmazingFeature'`)
 4. Push to branch (`git push origin feature/AmazingFeature`)
 5. Open Pull Request
-
----
-
-## 🐛 Troubleshooting
-
-### Buffer is not defined
-**Fixed**: Node.js polyfills configured via `vite-plugin-node-polyfills`
-
-### Chain ID mismatch
-**Fixed**: Updated from 50311 → 50312 to match actual RPC
-
-### Events not received
-**Check**: Contract deployed, WebSocket connected, wallet on correct network
-
-### Build fails
-**Run**: `npm install --legacy-peer-deps` (hardhat peer dependency workaround)
-
-See **CHAIN_ID_FIX.md** for detailed troubleshooting.
-
----
-
-## 🎥 Demo Video
-
-[Watch on YouTube](#) - Coming Soon
-
-**Highlights**:
-- Live gameplay demonstration
-- Real-time multi-client synchronization
-- Code walkthrough (SDK integration)
-- Architecture explanation
-
 ---
 
 ## 📞 Contact & Links
@@ -775,51 +655,3 @@ See **CHAIN_ID_FIX.md** for detailed troubleshooting.
 - **Contract**: [Explorer](https://testnet-explorer.somnia.network/address/0xc0f5c16087aa4176fb7e83fd39291f45cc10e62a)
 
 ---
-
-## 📄 License
-
-MIT License - see [LICENSE](LICENSE) file for details.
-
----
-
-## 🏆 Hackathon Judging Criteria Alignment
-
-### ✅ Technical Excellence
-- Production-grade SDK integration
-- Type-safe TypeScript implementation
-- Clean architecture with separation of concerns
-- Comprehensive error handling
-- Browser compatibility (polyfills)
-- Zero build warnings
-
-### ✅ Real-Time UX
-- <200ms client-to-client latency
-- WebSocket push architecture (no polling)
-- Instant UI feedback
-- Automatic reconnection
-- Multi-user synchronization
-
-### ✅ Somnia Integration
-- Deployed on Somnia Testnet (Chain ID: 50312)
-- Official Data Streams SDK integrated
-- Contract verified and operational
-- RPC & WebSocket endpoints configured
-
-### ✅ Potential Impact
-- Reusable framework for developers
-- Comprehensive documentation (12,500+ words)
-- Scalable architecture (4-phase roadmap)
-- Multiple use case applications (gaming, DeFi, social, IoT)
-- Open source contribution to Somnia ecosystem
-
----
-
-<div align="center">
-
-**Built with ❤️ for Somnia Data Streams Hackathon**
-
-⚡ **On-chain actions. Off-chain speed.** ⚡
-
-*Real-time multiplayer gaming on Somnia blockchain*
-
-</div>
