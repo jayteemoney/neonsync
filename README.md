@@ -2,6 +2,16 @@
 
 > **Real-time multiplayer gaming on Somnia. Instant on-chain synchronization. Zero-latency gameplay.**
 
+## About
+
+NEONSYNC is a real-time multiplayer gaming platform built on the Somnia blockchain, demonstrating production-grade implementation of blockchain gaming with instant synchronization across all players.
+
+**The Problem**: Traditional blockchain-based multiplayer games suffer from high latency (3-5 seconds), poor scalability, and delayed state synchronization. This creates a janky, frustrating user experience where player actions take several seconds to reflect globally, making competitive real-time gameplay impossible.
+
+**The Solution**: NEONSYNC leverages the Somnia Data Streams SDK to achieve near-instant on-chain synchronization (~100-200ms latency) using WebSocket-based event streaming. Players see actions reflected globally in under 200ms instead of 3-5 seconds, enabling smooth, competitive multiplayer experiences with all the benefits of blockchain verification, immutable records, and transparent leaderboards.
+
+---
+
 [![Somnia Testnet](https://img.shields.io/badge/Somnia-Testnet-00f0ff?style=for-the-badge)](https://testnet-explorer.somnia.network)
 [![Data Streams SDK](https://img.shields.io/badge/Data_Streams-Integrated-ff00ff?style=for-the-badge)](https://docs.somnia.network/somnia-data-streams)
 [![License: MIT](https://img.shields.io/badge/License-MIT-magenta.svg?style=for-the-badge)](LICENSE)
@@ -650,8 +660,7 @@ This project is a hackathon submission. Contributions welcome after evaluation p
 ## 📞 Contact & Links
 
 - **GitHub**: [@jayteemoney](https://github.com/jayteemoney)
-- **Demo Video**: [YouTube](#)
-- **Live App**: [Deployed URL](#)
+- **Demo Video**: [Loom](https://www.loom.com/share/792041a14bf443b8a5d4abef78c85315)
 - **Contract**: [Explorer](https://testnet-explorer.somnia.network/address/0xc0f5c16087aa4176fb7e83fd39291f45cc10e62a)
 
 ---
