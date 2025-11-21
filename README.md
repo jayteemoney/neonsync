@@ -12,7 +12,7 @@ NEONSYNC is a real-time multiplayer gaming platform built on the Somnia blockcha
 
 ---
 
-[![Somnia Testnet](https://img.shields.io/badge/Somnia-Testnet-00f0ff?style=for-the-badge)](https://testnet-explorer.somnia.network)
+[![Somnia Testnet](https://img.shields.io/badge/Somnia-Testnet-00f0ff?style=for-the-badge)](https://shannon-explorer.somnia.network)
 [![Data Streams SDK](https://img.shields.io/badge/Data_Streams-Integrated-ff00ff?style=for-the-badge)](https://docs.somnia.network/somnia-data-streams)
 [![License: MIT](https://img.shields.io/badge/License-MIT-magenta.svg?style=for-the-badge)](LICENSE)
 
@@ -96,7 +96,7 @@ Leaderboard syncs globally
 **Smart Contract**:
 - Address: `0xc0f5c16087aa4176fb7e83fd39291f45cc10e62a`
 - Network: Somnia Testnet
-- Verification: [View on Explorer](https://testnet-explorer.somnia.network)
+- Verification: [View on Explorer](https://shannon-explorer.somnia.network/address/0xc0f5c16087aa4176fb7e83fd39291f45cc10e62a)
 - Features:
   - Player registration system
   - Action recording with events
@@ -446,7 +446,7 @@ useEffect(() => {
 | **Address** | `0xc0f5c16087aa4176fb7e83fd39291f45cc10e62a` |
 | **RPC** | https://dream-rpc.somnia.network |
 | **WebSocket** | wss://dream-rpc.somnia.network/ws |
-| **Explorer** | https://testnet-explorer.somnia.network |
+| **Explorer** | https://shannon-explorer.somnia.network |
 
 ### Development Tools
 - **Hardhat** 3.0.13 - Smart contract development
@@ -661,6 +661,6 @@ This project is a hackathon submission. Contributions welcome after evaluation p
 
 - **GitHub**: [@jayteemoney](https://github.com/jayteemoney)
 - **Demo Video**: [Loom](https://www.loom.com/share/792041a14bf443b8a5d4abef78c85315)
-- **Contract**: [Explorer](https://testnet-explorer.somnia.network/address/0xc0f5c16087aa4176fb7e83fd39291f45cc10e62a)
+- **Contract**: [Explorer](https://shannon-explorer.somnia.network/address/0xc0f5c16087aa4176fb7e83fd39291f45cc10e62a)
 
 ---
